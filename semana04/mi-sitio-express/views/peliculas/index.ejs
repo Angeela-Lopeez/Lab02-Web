@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Películas y Series Disponibles</title>
+  <!-- Importar Materialize -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #fff0f6; /* rosa pastel */
+      font-family: 'Roboto', sans-serif;
+    }
+    nav {
+      background-color: #ec407a; /* rosa profesional */
+    }
+    h3, h5 {
+      color: #ad1457;
+      font-weight: 600;
+    }
+    .card {
+      border-radius: 12px;
+    }
+    table {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th {
+      background-color: #f8bbd0; 
+      color: #4a148c;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-wrapper container">
+      <a href="/peliculas" class="brand-logo">🎬 Catálogo</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/peliculas">Películas & Series</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h3 class="center-align">Películas y Series Disponibles</h3>
+
+    <!-- Formulario en card -->
+    <div class="card-panel z-depth-3">
+      <h5 class="center-align">Agregar nuevo registro</h5>
+      <form action="/peliculas/save" method="POST">
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <input type="text" name="titulo" id="titulo" required>
+            <label for="titulo">Título</label>
+          </div>
+          <div class="input-field col s12 m6">
+            <input type="text" name="genero" id="genero" required>
+            <label for="genero">Género</label>
+          </div>
+          <div class="input-field col s12 m6">
+            <input type="text" name="actriz" id="actriz" required>
+            <label for="actriz">Protagonista</label>
+          </div>
+          <div class="input-field col s12 m6">
+            <input type="number" name="año" id="año" required>
+            <label for="año">Año</label>
+          </div>
+          <div class="input-field col s12">
+            <textarea name="descripcion" id="descripcion" class="materialize-textarea"></textarea>
+            <label for="descripcion">Descripción</label>
+          </div>
+        </div>
+        <div class="center-align">
+          <button type="submit" class="waves-effect waves-light btn pink">Guardar</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tabla estilizada -->
+    <h5 class="center-align">Listado de Registros</h5>
+    <% if (catalogo.length === 0) { %>
+      <p class="center-align grey-text">No hay registros aún.</p>
+    <% } else { %>
+      <div class="card-panel z-depth-2">
+        <table class="striped responsive-table centered">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Género</th>
+              <th>Protagonista</th>
+              <th>Año</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% catalogo.forEach(item => { %>
+              <tr>
+                <td><%= item.titulo %></td>
+                <td><%= item.genero %></td>
+                <td><%= item.actriz %></td>
+                <td><%= item.año %></td>
+                <td><%= item.descripcion %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
