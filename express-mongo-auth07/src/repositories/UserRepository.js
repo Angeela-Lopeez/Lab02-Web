@@ -1,26 +1,37 @@
+// src/repositories/UserRepository.js
 import User from '../models/User.js';
 
 class UserRepository {
-    async create(userData) {
-        const user = new User(userData);
-        return user.save();
-    }
+  async create(userData) {
+    const user = new User(userData);
+    return user.save();
+  }
 
-    async findByEmail(email) {
-        return User.findOne({ email }).populate('roles').exec();
-    }
+  async findByEmail(email) {
+    return User.findOne({ email }).populate('roles').exec();
+  }
 
-    async findById(id) {
-        return User.findById(id).populate('roles').exec();
-    }
+  async findById(id) {
+    return User.findById(id).populate('roles').exec();
+  }
 
-    async updatePassword(id, hashedPassword) {
-        return User.findByIdAndUpdate(id, { password: hashedPassword }, { new: true }).exec();
-    }
+  async updatePassword(id, hashedPassword) {
+    return User.findByIdAndUpdate(
+      id,
+      { password: hashedPassword },
+      { new: true }
+    ).exec();
+  }
 
-    async getAll() {
-        return User.find().populate('roles').exec();
-    }
+  async updateById(id, payload) {
+    // evita que sobreescriban password por aquí
+    if ('password' in payload) delete payload.password;
+    return User.findByIdAndUpdate(id, payload, { new: true }).exec();
+  }
+
+  async getAll() {
+    return User.find().populate('roles').exec();
+  }
 }
 
 export default new UserRepository();
