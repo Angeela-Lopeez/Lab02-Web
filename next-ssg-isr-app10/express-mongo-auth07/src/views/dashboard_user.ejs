@@ -1,0 +1,32 @@
+<%- include('partials/header', { title: 'Dashboard usuario' }) %>
+
+<div id="dashArea">Cargando...</div>
+
+<script>
+(async function(){
+  const token = sessionStorage.getItem('token');
+  if (!token) return location.href = '/signIn';
+  // check expiry
+  try {
+    const meRes = await fetch('/api/users/me', { headers: { Authorization: 'Bearer ' + token }});
+    if (!meRes.ok) { sessionStorage.removeItem('token'); return location.href = '/signIn'; }
+    const me = await meRes.json();
+    document.getElementById('dashArea').innerHTML = `
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">Bienvenido, ${me.name} ${me.lastName}</span>
+          <p>Email: ${me.email}</p>
+          <p>Teléfono: ${me.phoneNumber}</p>
+          <p>Registrado: ${new Date(me.createdAt).toLocaleString()}</p>
+        </div>
+        <div class="card-action">
+          <a href="/profile">Mi perfil</a>
+          <a href="#" onclick="logout()">Cerrar sesión</a>
+        </div>
+      </div>
+    `;
+  } catch (e) { console.error(e); sessionStorage.removeItem('token'); location.href = '/signIn'; }
+})();
+</script>
+
+<%- include('partials/footer') %>
