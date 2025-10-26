@@ -1,7 +1,8 @@
 // src/controllers/UserController.js
 import userService from '../services/UserService.js';
 import userRepository from '../repositories/UserRepository.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
+
 
 class UserController {
   async getAll(req, res, next) {

@@ -1,5 +1,5 @@
-// src/services/AuthService.js
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
+
 import jwt from 'jsonwebtoken';
 import userRepository from '../repositories/UserRepository.js';
 import roleRepository from '../repositories/RoleRepository.js';

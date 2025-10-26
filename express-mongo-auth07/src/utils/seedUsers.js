@@ -1,5 +1,6 @@
 // src/utils/seedUsers.js
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
+
 import User from '../models/User.js';
 import Role from '../models/Role.js';
 
