@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Nuevo Post</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="container" style="margin-top:32px;">
+  <h4>Nuevo Post</h4>
+  <form action="/posts" method="post" class="col s12">
+    <div class="input-field">
+      <input type="text" id="title" name="title" required minlength="5" maxlength="30">
+      <label for="title">Título</label>
+    </div>
+
+    <div class="input-field">
+      <textarea id="content" name="content" class="materialize-textarea" required minlength="10"></textarea>
+      <label for="content">Contenido</label>
+    </div>
+
+    <div class="input-field">
+      <input type="url" id="imageUrl" name="imageUrl" placeholder="https://...">
+      <label for="imageUrl" class="active">Imagen (URL)</label>
+    </div>
+
+    <div class="input-field">
+      <input type="text" id="hashtags" name="hashtags" placeholder="#uno, #dos, tres">
+      <label for="hashtags" class="active">Hashtags (separados por coma o espacio)</label>
+    </div>
+
+    <div class="input-field">
+      <select name="userId" required>
+        <option value="" disabled selected>Selecciona un autor</option>
+        <% (users || []).forEach(u => { %>
+          <option value="<%= u._id %>"><%= u.name || u.email %></option>
+        <% }) %>
+      </select>
+      <label>Autor</label>
+    </div>
+
+    <button class="btn waves-effect waves-light" type="submit">
+      <i class="material-icons left">save</i>Guardar
+    </button>
+    <a href="/posts" class="btn-flat">Cancelar</a>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const elems = document.querySelectorAll('select');
+      M.FormSelect.init(elems);
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
