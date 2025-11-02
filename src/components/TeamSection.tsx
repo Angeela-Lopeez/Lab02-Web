@@ -27,7 +27,7 @@ export function TeamSection() {
     position: "",
     birthdate: null as Date | null,
     phone: "",
-    projectId: "" as string | null,
+    projectId: null as string | null,
     isActive: true,
   })
 
@@ -42,13 +42,13 @@ export function TeamSection() {
       position: "",
       birthdate: null,
       phone: "",
-      projectId: "",
+      projectId: null,
       isActive: true,
     })
     setOpen(true)
   }
 
-  // ✏️ Editar miembro
+  // ✏️ Editar miembro existente
   const startEdit = (id: string) => {
     const m = team.find(x => x.id === id)
     if (!m) return
@@ -61,7 +61,7 @@ export function TeamSection() {
       position: m.position,
       birthdate: m.birthdate ? new Date(m.birthdate) : null,
       phone: m.phone,
-      projectId: m.projectId || "",
+      projectId: m.projectId ?? null,
       isActive: m.isActive,
     })
     setOpen(true)
@@ -78,7 +78,7 @@ export function TeamSection() {
       position: form.position.trim(),
       birthdate: form.birthdate ? form.birthdate.toISOString().slice(0, 10) : "",
       phone: form.phone.trim(),
-      projectId: form.projectId || "",
+      projectId: form.projectId ?? "",
       isActive: form.isActive,
     }
 
@@ -90,10 +90,12 @@ export function TeamSection() {
 
   return (
     <>
+      {/* Botón crear nuevo miembro */}
       <div className="flex justify-end mb-4">
         <Button onClick={startCreate}>Nuevo miembro</Button>
       </div>
 
+      {/* Listado de miembros */}
       <div className="space-y-4">
         {team.map(m => (
           <Card key={m.id}>
@@ -114,7 +116,9 @@ export function TeamSection() {
                 <p><b>Rol:</b> {m.role}</p>
                 <p><b>Tel:</b> {m.phone}</p>
                 <p><b>Nacimiento:</b> {m.birthdate || "—"}</p>
-                <p className="sm:col-span-2"><b>Proyecto:</b> {projects.find(p => p.id === m.projectId)?.title || "—"}</p>
+                <p className="sm:col-span-2">
+                  <b>Proyecto:</b> {projects.find(p => p.id === m.projectId)?.title || "—"}
+                </p>
               </div>
               <div className="flex gap-2 mt-4">
                 <Button size="sm" variant="outline" onClick={() => startEdit(m.id)}>Editar</Button>
@@ -125,19 +129,24 @@ export function TeamSection() {
         ))}
       </div>
 
+      {/* Diálogo Crear/Editar */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <form onSubmit={submit}>
             <DialogHeader>
               <DialogTitle>{editingId ? "Editar miembro" : "Nuevo miembro"}</DialogTitle>
-              <DialogDescription>Completa los campos y guarda.</DialogDescription>
+              <DialogDescription>Completa los campos y guarda los datos.</DialogDescription>
             </DialogHeader>
 
             <div className="grid gap-3 py-2">
               <div className="grid sm:grid-cols-2 gap-3">
                 <div className="grid gap-1">
                   <Label>User ID *</Label>
-                  <Input value={form.userId} onChange={e => setForm(s => ({ ...s, userId: e.target.value }))} required />
+                  <Input
+                    value={form.userId}
+                    onChange={e => setForm(s => ({ ...s, userId: e.target.value }))}
+                    required
+                  />
                 </div>
                 <div className="grid gap-1">
                   <Label>Rol *</Label>
@@ -188,32 +197,49 @@ export function TeamSection() {
                       <Calendar
                         mode="single"
                         selected={form.birthdate || undefined}
-                        onSelect={(d) => setForm(s => ({ ...s, birthdate: d ?? null }))}
+                        onSelect={d => setForm(s => ({ ...s, birthdate: d ?? null }))}
                       />
                     </PopoverContent>
                   </Popover>
                 </div>
+
                 <div className="grid gap-1">
                   <Label>Proyecto</Label>
-                  <Select value={form.projectId || ""} onValueChange={v => setForm(s => ({ ...s, projectId: v }))}>
-                    <SelectTrigger><SelectValue placeholder="(Opcional)" /></SelectTrigger>
+                  <Select
+                    value={form.projectId ?? "none"}
+                    onValueChange={v => setForm(s => ({ ...s, projectId: v === "none" ? null : v }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="(Opcional)" />
+                    </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">—</SelectItem>
-                      {projects.map(p => <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>)}
+                      <SelectItem value="none">(Sin proyecto asignado)</SelectItem>
+                      {projects.map(p => (
+                        <SelectItem key={p.id} value={p.id}>
+                          {p.title}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
               <div className="flex items-center gap-3 pt-2">
-                <Switch checked={form.isActive} onCheckedChange={v => setForm(s => ({ ...s, isActive: !!v }))} />
+                <Switch
+                  checked={form.isActive}
+                  onCheckedChange={v => setForm(s => ({ ...s, isActive: !!v }))}
+                />
                 <Label>Activo</Label>
               </div>
             </div>
 
             <div className="flex justify-end gap-2">
-              <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
-              <Button type="submit">{editingId ? "Guardar cambios" : "Crear"}</Button>
+              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                Cancelar
+              </Button>
+              <Button type="submit">
+                {editingId ? "Guardar cambios" : "Crear"}
+              </Button>
             </div>
           </form>
         </DialogContent>
